@@ -1,7 +1,6 @@
 use wasm_bindgen::prelude::*;
 use web_sys::console;
 
-
 // When the `wee_alloc` feature is enabled, this uses `wee_alloc` as the global
 // allocator.
 //
@@ -9,7 +8,6 @@ use web_sys::console;
 #[cfg(feature = "wee_alloc")]
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
-
 
 // This is like the `main` function, except for JavaScript.
 #[wasm_bindgen(start)]
@@ -19,9 +17,16 @@ pub fn main_js() -> Result<(), JsValue> {
     #[cfg(debug_assertions)]
     console_error_panic_hook::set_once();
 
-
     // Your code goes here!
     console::log_1(&JsValue::from_str("Hello world!"));
-
+    let window = web_sys::window().expect("no global `window` exists");
+    // アラート出してみる
+    window.alert_with_message("Hello World !!!");
+    let document = window.document().expect("should have a document on window");
+    // domを追加してみる
+    let body = document.body().expect("document should have a body");
+    let val = document.create_element("p")?;
+    val.set_inner_html("Hello from Rust!");
+    body.append_child(&val)?;
     Ok(())
 }
